@@ -41,9 +41,8 @@ The files have all been provided to use and require the user to populate the `ne
 1. You must update the `env.type` so that another Flux can be deployed.
 
 1. Update the following for each organization in the `gitops` section.
-    -  `git_url` and `git-repo` to your bevel-samples repo
-    - `chart_source` to `examples/supplychain-app/charts` 
-    - `release_dir` to `examples/supplychain-app/releases/dev`
+    - `git_url` and `git-repo` to your bevel-samples repo
+    - `chart_source` to `examples/supplychain-app/charts`
 1. Make sure that you have deployed the smart contracts for the platform of choice; along with the correct `network.yaml` for the DLT.
     - For R3 Corda, run the `platforms/r3-corda/configuration/deploy-cordapps.yaml`
     - For Hyperledger Fabric, run the `platforms/hyperledger-fabric/configuration/chaincode-ops.yaml`
@@ -90,9 +89,9 @@ The files have all been provided to use and require the user to populate the `ne
 
 1. You must update the `env.type` so that another Flux can be deployed.
 1. Update the following for each organization in the `gitops` section.
-    -  `git_url` and `git-repo` to your bevel-samples repo
-    - `chart_source` to `examples/identity-app/charts` 
-    - `release_dir` to `examples/identity-app/releases/dev`
+    - `git_url` and `git-repo` to your bevel-samples repo
+    - `chart_source` to `examples/identity-app/charts`
+
 1. Make sure that the required docker images are built and stored on the repository.
 
 ### Deploying the identity-app
@@ -129,9 +128,8 @@ The files have all been provided to use and require the user to populate the `ne
 1. Create a copy of the `network.yaml` you have used to set up your network and add the application specific key-values to it. Check samples in `examples/dscp-app/configuration/samples`.
 1. You must update the `env.type` so that another Flux can be deployed.
 1. Update the following for each organization in the `gitops` section.
-    -  `git_url` and `git-repo` to your bevel-samples repo
-    - `chart_source` to `examples/dscp-app/charts` 
-    - `release_dir` to `examples/dscp-app/releases/dev`
+    - `git_url` and `git-repo` to your bevel-samples repo
+    - `chart_source` to `examples/dscp-app/charts`
 
 1. Ensure that the required docker images are built and stored on the repository.
 

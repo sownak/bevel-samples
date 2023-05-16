@@ -151,7 +151,7 @@ NOTE: the test details will be cached so you could use `go clean` if you will be
 
 ### Update Chaincode deployed
 
-To update chaincode running on a clusters, use the `platforms/hyperledger-fabric/configuration/chaincode-upgrade.yaml` playbook. 
+To update chaincode running on a clusters, follow [these instructions](https://hyperledger-bevel.readthedocs.io/en/latest/operations/upgrading_chaincode.html). 
 The input network.yaml should be updated with a new version of chaincode. Please do not use dot(.) in chaincode versions.
 
 
