@@ -20,6 +20,7 @@ spec:
     fullnameOverride: tierone-chain-watcher
     metadata:
       namespace: tierone-subs
+      storageClass: "awsstorageclass"
     config:
       dbHost: tierone-postgresql.tierone-subs
       dbPort: 5432
