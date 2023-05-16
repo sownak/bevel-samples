@@ -1,0 +1,59 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tiertwo-id-service
+  namespace: tiertwo-subs
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-dscpapp
+        namespace: flux-dscpapp
+      chart: examples/dscp-app/charts/dscp-identity-service
+  releaseName: tiertwo-id-service
+  values:
+    fullNameOverride: tiertwo-id-service
+    config:
+      externalNodeHost: tiertwo
+      externalPostgresql: tiertwo-postgresql.tiertwo-subs
+      port: 3001
+      logLevel: info
+      dbName: id-service
+      dbPort: 5432
+      enableLivenessProbe: true
+      selfAddress: 
+      auth:
+        type: NONE
+    ingress:
+      enabled: false
+      # annotations: {}
+      # className
+      paths:
+        - /v1/members
+    replicaCount: 1
+    image:
+      repository: ghcr.io/digicatapult/dscp-identity-service
+      pullPolicy: IfNotPresent
+      tag: 'v1.6.0'
+      pullSecrets: 
+
+    postgresql:
+      enabled: false
+      postgresqlDatabase: id-service
+      postgresqlUsername: postgres
+      postgresqlPassword: postgres123
+    dscpNode:
+      enabled: false
+
+    vault:
+      alpineutils: ghcr.io/hyperledger/alpine-utils:1.0
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      secretprefix: secretsv2/data/tiertwo-subs/tiertwo
+      serviceaccountname: vault-auth
+      role: vault-role
+      authpath: substratetiertwo
