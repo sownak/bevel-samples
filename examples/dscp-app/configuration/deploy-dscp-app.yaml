@@ -64,10 +64,6 @@
       component_gitops: "{{ org.gitops }}"
       component_vault: "{{ org.vault }}"
       auth_type: "{{ org.auth.type }}"
-      auth_jwksUri: "{{ org.auth.jwksUri }}"
-      auth_audience: "{{ org.auth.audience }}"
-      auth_issuer: "{{ org.auth.issuer }}"
-      auth_tokenUrl: "{{ org.auth.tokenUrl }}"
       values_dir: "{{ playbook_dir }}/../../../{{ org.gitops.release_dir }}/{{ org.name | lower }}"
     loop: "{{ network['organizations'] }}"
     loop_control:
@@ -98,10 +94,6 @@
       component_gitops: "{{ org.gitops }}"
       component_vault: "{{ org.vault }}"
       auth_type: "{{ org.auth.type }}"
-      auth_jwksUri: "{{ org.auth.jwksUri }}"
-      auth_audience: "{{ org.auth.audience }}"
-      auth_issuer: "{{ org.auth.issuer }}"
-      auth_tokenUrl: "{{ org.auth.tokenUrl }}"
       values_dir: "{{ playbook_dir }}/../../../{{ org.gitops.release_dir }}/{{ org.name | lower }}"
     loop: "{{ network['organizations'] }}"
     loop_control:
@@ -117,10 +109,6 @@
       component_gitops: "{{ org.gitops }}"
       external_suffix: "{{ org.external_url_suffix }}"
       auth_type: "{{ org.auth.type }}"
-      auth_jwksUri: "{{ org.auth.jwksUri }}"
-      auth_audience: "{{ org.auth.audience }}"
-      auth_issuer: "{{ org.auth.issuer }}"
-      auth_tokenUrl: "{{ org.auth.tokenUrl }}"
       values_dir: "{{ playbook_dir }}/../../../{{ org.gitops.release_dir }}/{{ org.name | lower }}"
     loop: "{{ network['organizations'] }}"
     loop_control:
