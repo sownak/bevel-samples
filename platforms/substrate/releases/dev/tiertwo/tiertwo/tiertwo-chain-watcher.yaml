@@ -20,6 +20,7 @@ spec:
     fullnameOverride: tiertwo-chain-watcher
     metadata:
       namespace: tiertwo-subs
+      storageClass: "awsstorageclass"
     config:
       dbHost: tiertwo-postgresql.tiertwo-subs
       dbPort: 5432
