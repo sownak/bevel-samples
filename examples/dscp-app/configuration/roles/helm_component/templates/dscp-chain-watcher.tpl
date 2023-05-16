@@ -20,6 +20,7 @@ spec:
     fullnameOverride: {{ name }}-chain-watcher
     metadata:
       namespace: {{ component_ns }}
+      storageClass: "{{ org.cloud_provider }}storageclass"
     config:
       dbHost: {{ db_host_addr }}.{{ component_ns }}
       dbPort: {{ peer.postgresql.port }}

@@ -109,16 +109,18 @@ spec:
                     echo -n "${gcpKey}" > ${MOUNT_PATH}/gcpKey.json
                   fi
 
-                  vault_secret_key_auth="${VAULT_SECRET_PREFIX}/inteliAuth"
+                  if [ "${AUDIENCE}" != "" ]; then
+                    vault_secret_key_auth="${VAULT_SECRET_PREFIX}/inteliAuth"
 
-                  echo "Getting the auth0 keys from vault: $vault_secret_key_auth"          
-                  LOOKUP_SECRET_RESPONSE=$(curl -sS \
-                    --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
-                    ${VAULT_ADDR}/v1/${vault_secret_key_auth} | \
-                    jq -r 'if .errors then . else . end')
-                  validateVaultResponse "secret (${vault_secret_key_auth})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
-                  CLIENT_ID=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["clientId"]')
-                  CLIENT_SECRET=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["clientSecret"]')
+                    echo "Getting the auth0 keys from vault: $vault_secret_key_auth"          
+                    LOOKUP_SECRET_RESPONSE=$(curl -sS \
+                      --header "X-Vault-Token:${VAULT_CLIENT_TOKEN}" \
+                      ${VAULT_ADDR}/v1/${vault_secret_key_auth} | \
+                      jq -r 'if .errors then . else . end')
+                    validateVaultResponse "secret (${vault_secret_key_auth})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
+                    CLIENT_ID=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["clientId"]')
+                    CLIENT_SECRET=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["clientSecret"]')
+                  fi
 
                   INTELI_API_ADDR="${INTELI_HOST}:${INTELI_PORT}"
 
