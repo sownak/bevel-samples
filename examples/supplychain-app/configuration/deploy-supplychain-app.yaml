@@ -266,3 +266,7 @@
     when: 
       - network['type'] == 'besu' 
       - component_type != "validator"
+  vars: #These variables can be overriden from the command line
+    install_os: "linux"           # Default to linux OS
+    install_arch:  "amd64"        # Default to amd64 architecture
+    bin_install_dir:  "~/bin"     # Default to /bin install directory for binaries
