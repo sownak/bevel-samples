@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: certissuer
+  namespace: tiertwo-subs
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-dscpapp
+        namespace: flux-dscpapp
+      chart: examples/dscp-app/charts/certissuer
+  releaseName: certissuer
+  values:
+    certificate:
+      email: tiertwo@intelipoc.com
+      issuedFor: tiertwo
