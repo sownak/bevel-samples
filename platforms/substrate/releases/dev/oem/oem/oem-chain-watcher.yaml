@@ -20,6 +20,7 @@ spec:
     fullnameOverride: oem-chain-watcher
     metadata:
       namespace: oem-subs
+      storageClass: "awsstorageclass"
     config:
       dbHost: oem-postgresql.oem-subs
       dbPort: 5432
