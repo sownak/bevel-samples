@@ -123,7 +123,7 @@ spec:
                   fi
 
                   INTELI_API_ADDR="${INTELI_HOST}:${INTELI_PORT}"
-                  checkResponse=$(curl -s ${INTELI_API_ADDR}/v1/health)
+                  checkResponse=$(curl -s ${INTELI_API_ADDR}/health)
 
                   if [ "$checkResponse" == "ok" ]; then
                     echo "response ok - no token required"

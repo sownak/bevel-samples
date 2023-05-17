@@ -28,7 +28,7 @@
       git_url: "{{ item.gitops.git_url }}"
       git_key: "{{ item.gitops.private_key | default() }}"
       flux_version: "0.35.0"
-    with_items: "{{ network.organizations }}" 
+    with_items: "{{ network.organizations }}"
     
   # Setup letsencrypt cert-manager
   - name: "Setup cert-manager"
