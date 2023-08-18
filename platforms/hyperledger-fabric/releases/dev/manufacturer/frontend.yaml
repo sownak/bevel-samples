@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: manufacturer-frontend
+  namespace: manufacturer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturerfabric-frontend
+  interval: 1m
+  chart:
+   spec:
+    chart: examples/supplychain-app/charts/frontend
+    sourceRef:
+      kind: GitRepository
+      name: flux-demo-fabric-app
+      namespace: flux-demo-fabric-app
+  values:
+    nodeName: manufacturer-frontend
+    metadata:
+      namespace: manufacturer-net
+    replicaCount: 1
+    frontend:
+      serviceType: ClusterIP
+      nodePorts:
+        port: 8080
+        targetPort: 80
+      image: ghcr.io/hyperledger/bevel-supplychain-frontend:latest
+      pullPolicy: Always
+      pullSecrets: regcred
+      env:
+        webserver: https://manufacturerapi.hf.demo.aws.blockchaincloudpoc.com
+    deployment:
+      annotations: {}
+    proxy:
+      provider: haproxy
+      peer_name: manufacturer
+      external_url_suffix: hf.demo.aws.blockchaincloudpoc.com
+      ambassador_secret: peer0-manufacturer-net-ambassador-certs
