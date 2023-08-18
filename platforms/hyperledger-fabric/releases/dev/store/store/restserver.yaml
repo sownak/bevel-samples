@@ -1,0 +1,50 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: store-restserver
+  namespace: store-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: store-restserver
+  interval: 1m
+  chart:
+   spec:
+    chart: examples/supplychain-app/charts/fabric-restserver
+    sourceRef:
+      kind: GitRepository
+      name: flux-demo-fabric-app
+      namespace: flux-demo-fabric-app
+  values:
+    metadata:
+      namespace: store-net
+    server:
+      name: store-restserver
+      port: 20001
+      localmspid: storeMSP
+      image: ghcr.io/hyperledger/bevel-supplychain-fabric:rest-server-latest
+      username: user1
+      cert_path: "/secret/tls/user1.cert"
+      key_path: "/secret/tls/user1.pem"
+    storage:
+      storageclassname: store-aws-storageclass
+      storagesize: 512Mi
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      role: vault-role
+      authpath: demo-fabricstore-net-auth
+      secretprefix: secretsv2/data/crypto/peerOrganizations/store-net
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      image: ghcr.io/hyperledger/alpine-utils:1.0
+    service:
+      servicetype: ClusterIP
+      ports:
+        apiPort: 20001
+        targetPort: 8000
+    connection:
+      peer: peer0.store-net
+      peerAddress: peer0.store-net
+      peerPort: 7051
+      ordererAddress: orderer1.hf.demo.aws.blockchaincloudpoc.com
+      ordererPort: 443
