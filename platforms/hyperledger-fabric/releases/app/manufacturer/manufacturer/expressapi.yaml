@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: manufacturer-expressapi
+  namespace: manufacturer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  chart:
+   spec:
+    chart: examples/supplychain-app/charts/expressapp
+    sourceRef:
+      kind: GitRepository
+      name: flux-demo-fabric-app
+      namespace: flux-demo-fabric-app
+  releaseName: manufacturerfabric-expressapi
+  values:
+    nodeName: manufacturer-expressapi
+    metadata:
+      namespace: manufacturer-net
+    replicaCount: 1
+    expressapp:
+      serviceType: ClusterIP
+      image: ghcr.io/hyperledger/bevel-supplychain-fabric:express-app-latest
+      pullPolicy: Always
+      pullSecrets: regcred
+      nodePorts:
+        port: 3000
+        targetPort: 3000
+        name: tcp
+      env:
+        apiUrl: http://manufacturer-restserver.manufacturer-net:20001/api/v1
+    proxy:
+      provider: haproxy
+      name: manufacturer
+      type: fabric
+      external_url_suffix: hf.demo.aws.blockchaincloudpoc.com
+      peer_name: peer0
