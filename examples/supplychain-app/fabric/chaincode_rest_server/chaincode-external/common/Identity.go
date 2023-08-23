@@ -2,8 +2,9 @@ package common
 
 import (
 	"crypto/x509"
-	"encoding/pem"
 	"fmt"
+
+	"github.com/hyperledger/fabric-chaincode-go/pkg/cid"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 )
@@ -16,23 +17,21 @@ type Identity struct {
 
 // GetInvokerIdentity returns an Identity for the user invoking the transaction
 func GetInvokerIdentity(stub shim.ChaincodeStubInterface) (*Identity, error) {
+	var mspid string
 	var err error
+	var cert *x509.Certificate
 
-	callerCert, _ := stub.GetCreator()
-	certBlock, _ := pem.Decode(callerCert)
-
-	if certBlock == nil {
-		fmt.Printf("Failed to decode certificate")
-		return nil, nil
+	mspid, err = cid.GetMSPID(stub)
+	if err != nil {
+		fmt.Printf("Error getting MSP identity: %s\n", err.Error())
+		return nil, err
 	}
 
-	cert, err := x509.ParseCertificate(certBlock.Bytes)
+	cert, err = cid.GetX509Certificate(stub)
 	if err != nil {
 		fmt.Printf("Error getting client certificate: %s\n", err.Error())
 		return nil, err
 	}
-
-	mspid := cert.Issuer.Organization[0]
 
 	return &Identity{Organization: mspid, Cert: cert}, nil
 }
