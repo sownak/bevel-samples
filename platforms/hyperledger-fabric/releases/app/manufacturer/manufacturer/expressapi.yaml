@@ -22,7 +22,7 @@ spec:
     replicaCount: 1
     expressapp:
       serviceType: ClusterIP
-      image: ghcr.io/hyperledger/bevel-supplychain-fabric:express-app-latest
+      image: ghcr.io/hyperledger/bevel-supplychain-fabric:express-app-v1
       pullPolicy: Always
       pullSecrets: regcred
       nodePorts:

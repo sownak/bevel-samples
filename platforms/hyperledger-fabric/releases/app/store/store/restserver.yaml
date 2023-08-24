@@ -22,7 +22,7 @@ spec:
       name: store-restserver
       port: 20001
       localmspid: storeMSP
-      image: ghcr.io/hyperledger/bevel-supplychain-fabric:rest-server-latest
+      image: ghcr.io/hyperledger/bevel-supplychain-fabric:rest-server-v1
       username: user1
       cert_path: "/secret/tls/user1.cert"
       key_path: "/secret/tls/user1.pem"
