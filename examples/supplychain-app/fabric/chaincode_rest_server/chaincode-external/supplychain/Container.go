@@ -103,7 +103,7 @@ func (s *SmartContract) getAllContainer(stub shim.ChaincodeStubInterface, args [
 		// Don't return Container issuer isn't a party to
 		var container common.Container
 		err = json.Unmarshal(state.Value, &container)
-		if err != nil && err.Error() != "Not a Container" {
+		if err != nil && err.Error() != "not a Container" {
 			return shim.Error(err.Error())
 		}
 		if container.AccessibleBy(identity) {
@@ -260,7 +260,7 @@ func (s *SmartContract) updateContainerCustodian(stub shim.ChaincodeStubInterfac
 			}
 			var contentState common.Product
 			err := json.Unmarshal(contentBytes, &contentState)
-			if err != nil && err.Error() == "Not a Product" {
+			if err != nil && err.Error() == "not a Product" {
 				//recursivly claim custodian on containers
 				var innercontainer common.Container
 				err = json.Unmarshal(contentBytes, &innercontainer)
@@ -333,7 +333,7 @@ func (s *SmartContract) packageItem(stub shim.ChaincodeStubInterface, args []str
 	var contentProduct common.Product
 	err = json.Unmarshal(contentBytes, &contentProduct)
 
-	if err != nil && err.Error() == "Not a Product" {
+	if err != nil && err.Error() == "not a Product" {
 		//retry with container
 		var contentContainer common.Container
 		err = json.Unmarshal(contentBytes, &contentContainer)

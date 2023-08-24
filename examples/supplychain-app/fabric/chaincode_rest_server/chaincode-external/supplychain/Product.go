@@ -112,7 +112,7 @@ func (s *SmartContract) getAllProducts(stub shim.ChaincodeStubInterface, args []
 		// Don't return products issuer isn't a party to
 		var product common.Product
 		err = json.Unmarshal(state.Value, &product)
-		if err != nil && err.Error() != "Not a Product" {
+		if err != nil && err.Error() != "not a Product" {
 			return shim.Error(err.Error())
 		}
 		if product.AccessibleBy(identity) {
