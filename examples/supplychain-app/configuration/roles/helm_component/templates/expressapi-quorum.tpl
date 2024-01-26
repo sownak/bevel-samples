@@ -26,7 +26,7 @@ spec:
       serviceaccountname: vault-auth
       keyname: General
       role: vault-role
-      authpath: quorum{{ name }}
+      authpath: {{ network.env.type }}{{ name }}
     images:
       alpineutils: {{ network.docker.url }}/alpine-utils:1.0
     expressapp:
