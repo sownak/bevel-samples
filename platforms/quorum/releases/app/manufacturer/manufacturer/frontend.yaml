@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: manufacturer-frontend
+  namespace: manufacturer-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturerquorum-frontend
+  interval: 1m
+  chart:
+   spec:
+    chart: examples/supplychain-app/charts/frontend
+    sourceRef:
+      kind: GitRepository
+      name: flux-demo-quorum-app
+      namespace: flux-demo-quorum-app
+  values:
+    nodeName: manufacturer-frontend
+    metadata:
+      namespace: manufacturer-quo
+    replicaCount: 1
+    frontend:
+      serviceType: ClusterIP
+      nodePorts:
+        port: 8080
+        targetPort: 80
+      image: ghcr.io/hyperledger/bevel-supplychain-frontend:1.0.0
+      pullPolicy: IfNotPresent
+      pullSecrets: regcred
+      env:
+        webserver: https://manufacturerapi.quo.demo.aws.blockchaincloudpoc.com
+    deployment:
+      annotations: {}
+    proxy:
+      provider: ambassador
+      peer_name: manufacturer
+      external_url_suffix: quo.demo.aws.blockchaincloudpoc.com
+      ambassador_secret: manufacturer-ambassador-certs

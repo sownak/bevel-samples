@@ -1,0 +1,52 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: manufacturer-expressapi
+  namespace: manufacturer-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturerquorum-expressapi
+  interval: 1m
+  chart:
+   spec:
+    chart: examples/supplychain-app/charts/expressapp-quorum
+    sourceRef:
+      kind: GitRepository
+      name: flux-demo-quorum-app
+      namespace: flux-demo-quorum-app
+  values:
+    nodeName: manufacturer-expressapi
+    metadata:
+      namespace: manufacturer-quo
+    replicaCount: 1
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      secretprefix: secretsv2/data/manufacturer/smartContracts
+      serviceaccountname: vault-auth
+      keyname: General
+      role: vault-role
+      authpath: quorummanufacturer
+    images:
+      alpineutils: ghcr.io/hyperledger/alpine-utils:1.0
+    expressapp:
+      serviceType: ClusterIP
+      image: ghcr.io/hyperledger/bevel-supplychain-quorum:1.0.0
+      pullPolicy: IfNotPresent
+      pullSecrets: regcred
+      nodePorts:
+        port: 3000
+        targetPort: 3000
+        name: tcp
+      env:
+        geth_address: http://manufacturerrpc.quo.demo.aws.blockchaincloudpoc.com
+        node_subject: O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH
+        node_organization: Manufacturer
+        node_organization_unit: manufacturer
+        protocol: ibft
+    proxy:
+      provider: ambassador
+      name: manufacturer
+      type: quorum
+      external_url_suffix: quo.demo.aws.blockchaincloudpoc.com
+      peer_name: manufacturer

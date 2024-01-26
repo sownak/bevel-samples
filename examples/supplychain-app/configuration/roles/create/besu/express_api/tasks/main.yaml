@@ -80,7 +80,7 @@
   replace:
     path: "{{ playbook_dir }}/../../../build/SupplychainDemo_besu.postman_environment.json"
     regexp: "{{ organization_data.name | lower }}_account"
-    replace: "{{ node_info.node_address }}"
+    replace: "0x{{ node_info.node_address }}"
   loop: "{{ node_address_list }}"
   loop_control:
     loop_var: node_info

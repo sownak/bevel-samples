@@ -22,7 +22,7 @@ spec:
     replicaCount: 1
     vault:
       address: {{ organization_data.vault.url }}
-      secretprefix: {{ organization_data.vault.secret_path | default('secretsv2') }}/data/{{ component_ns }}/smartContracts
+      secretprefix: {{ organization_data.vault.secret_path | default('secretsv2') }}/data/{{ organization_data.name | lower }}/smartContracts
       serviceaccountname: vault-auth
       keyname: General
       role: vault-role
@@ -31,8 +31,8 @@ spec:
       alpineutils: {{ network.docker.url }}/alpine-utils:1.0
     expressapp:
       serviceType: ClusterIP
-      image: {{ network.docker.url }}/{{ expressapi_image }}
-      pullPolicy: Always
+      image: ghcr.io/hyperledger/bevel-supplychain-quorum:1.0.0
+      pullPolicy: IfNotPresent
       pullSecrets: regcred
       nodePorts:
         port: {{ peer_expressapi_port }}
