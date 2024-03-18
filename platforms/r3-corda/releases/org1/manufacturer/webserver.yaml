@@ -1,0 +1,80 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: manufacturer-springboot
+  namespace: manufacturer-ns
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturer-springboot
+  interval: 1m
+  chart:
+    spec:
+      chart: examples/supplychain-app/charts/springbootwebserver
+      sourceRef:
+        kind: GitRepository
+        name: flux-corda-app
+        namespace: flux-corda-app
+  values:
+    nodeName: manufacturer-springboot
+    replicas: 1
+    metadata:
+      namespace: manufacturer-ns
+      type: cordaopensource
+    image:
+      containerName: ghcr.io/bevel-supplychain-corda:springboot-latest
+      initContainerName: ghcr.io/alpine-utils:1.0
+      imagePullSecret: regcred
+      privateCertificate: true
+    smartContract:
+      JAVA_OPTIONS : -Xmx512m
+    volume:
+      mountPath: /opt/corda
+    nodeConf:
+      node: manufacturer
+      nodeRpcPort: 10003
+      nodeRpcAdminPort: 10005
+      controllerName: Controller
+      trustStorePath: /opt/corda/certificates/sslkeystore.jks
+      trustStoreProvider: jks
+      legalName: O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH
+      devMode: false
+      useHTTPS: true
+      useSSL: false
+      tlsAlias: cordaclienttls
+      ssl:
+        certificatesDirectory: na-ssl-false
+        sslKeystoreFileName: na-ssl-false
+        ssltruststore: na-ssl-false
+    credentials:
+      rpcUser: manufactureroperations
+    resources:
+      limits: "512Mi"
+      requests: "512Mi"
+    storage:
+      memory: 512Mi
+      name: manufacturer-azure-storageclass
+    web:
+      targetPort: 20001
+      port: 20001
+    service:
+      type: NodePort
+      annotations: {}
+    networkservices:
+      networkmap: na
+      doorman: na
+    vault:
+      address: "http://vault.internal.demo.blockchaincloudpoc.com:9001"
+      role: vault-role
+      authpath: cordamanufacturer
+      serviceaccountname: vault-auth
+      rpcusersecretprefix: manufacturer/data/credentials/rpcusers
+      keystoresecretprefix: manufacturer/data/credentials/keystore
+      certsecretprefix: manufacturer/data/certs
+    node:
+      readinesscheckinterval: 10
+      readinessthreshold: 15
+    deployment:
+      annotations: {}
+    pvc:
+      annotations: {}
