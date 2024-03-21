@@ -59,7 +59,7 @@
     component_name: "{{ node.name }}-expressapi"
     kubernetes: "{{ organization_data.k8s }}"
     label_selectors:
-      - app.kubernetes.io/release = {{ component_name }}
+      - app = {{ component_name }}
   loop: "{{ organization_data.services.peers }}"
   loop_control:
     loop_var: node

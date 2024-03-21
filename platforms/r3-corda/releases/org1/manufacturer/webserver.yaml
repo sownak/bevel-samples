@@ -17,7 +17,7 @@ spec:
         namespace: flux-corda-app
   values:
     image:
-      webserver: ghcr.io/hyperledger/bevel-supplychain-corda:springboot-4.9y
+      webserver: ghcr.io/hyperledger/bevel-supplychain-corda:springboot-latest
       initContainer: ghcr.io/hyperledger/bevel-alpine:latest
       imagePullSecret: regcred
     smartContract:
