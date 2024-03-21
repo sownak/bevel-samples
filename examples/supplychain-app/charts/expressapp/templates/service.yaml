@@ -7,8 +7,8 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Values.nodeName }}
-  namespace: {{ .Values.metadata.namespace }}
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
   {{- if eq $.Values.proxy.provider "ambassador" }}
   annotations:
     getambassador.io/config: | 
@@ -19,9 +19,9 @@ metadata:
       hosts:
       - {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
       {{ if eq .Values.proxy.type "fabric" }}
-      secret: {{ .Values.proxy.peer_name }}-{{ .Values.metadata.namespace }}-ambassador-certs.default
+      secret: {{ .Values.proxy.name }}-{{ .Release.Namespace }}-ambassador-certs.default
       {{ else }}
-      secret: {{ .Values.proxy.peer_name }}-ambassador-certs.{{ .Values.metadata.namespace }}
+      secret: {{ .Values.proxy.name }}-tls-certs.{{ .Release.Namespace }}
       {{ end }}
       secret_namespacing: true
       min_tls_version: v1.2
@@ -31,32 +31,32 @@ metadata:
       name: {{ .Values.proxy.name }}_api_p2p_mapping
       prefix: /
       host: {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
-      service: {{ .Values.proxy.name }}-expressapi.{{ .Values.metadata.namespace }}:{{ .Values.expressapp.nodePorts.port }}
+      service: {{ .Values.proxy.name }}-expressapi.{{ .Release.Namespace }}:{{ .Values.expressapp.nodePorts.port }}
       timeout_ms: 20000
       tls: false
   {{ end }}
   labels:
-    run: {{ .Values.nodeName }}
-    app.kubernetes.io/name: {{ .Values.nodeName }}
+    run: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }} 
 spec:
-  type: {{ .Values.expressapp.serviceType }}
+  type: ClusterIP
   selector:
-    app: {{ .Values.nodeName }}
+    app: {{ .Release.Name }}
   ports:
   - port: {{ .Values.expressapp.nodePorts.port }}
     targetPort: {{ .Values.expressapp.nodePorts.targetPort }}
     protocol: TCP
-    name: {{ .Values.expressapp.nodePorts.name }}
+    name: tcp
     
 {{- if eq $.Values.proxy.provider "haproxy" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.nodeName }}
-  namespace:  {{ $.Values.metadata.namespace }}
+  name: {{ .Release.Name }}
+  namespace:  {{ $.Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: "haproxy"
 spec:
@@ -64,9 +64,9 @@ spec:
   - hosts:
     - {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
     {{- if eq .Values.proxy.type "fabric" }}
-    secretName: {{ .Values.proxy.peer_name }}-{{ .Values.metadata.namespace }}-ambassador-certs
+    secretName: {{ .Values.proxy.name }}-{{ .Release.Namespace }}-ambassador-certs
     {{- else }}
-    secretName: {{ .Values.proxy.peer_name }}-ambassador-certs
+    secretName: {{ .Values.proxy.name }}-tls-certs
     {{- end }}
   rules:
   - host: {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
