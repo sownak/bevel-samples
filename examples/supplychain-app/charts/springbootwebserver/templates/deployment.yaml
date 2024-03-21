@@ -40,6 +40,7 @@ spec:
         containers:
         - name: corda-web
           image: {{ .Values.image.webserver }}
+          imagePullPolicy: Always
           command: ["sh", "-c"]
           args:
           - |-
@@ -98,7 +99,7 @@ spec:
             cat << EOF > /opt/corda/config/app.properties
             config.rpc.username={{ .Values.credentials.rpcUser }}
             config.rpc.password={{ .Values.credentials.rpcUserPassword }}
-            config.rpc.host={{ .Values.nodeConf.node }}.{{ .Release.Namespace }}
+            config.rpc.host={{ .Values.nodeConf.node }}
             config.rpc.port={{ .Values.nodeConf.nodeRpcPort }}
             config.controller.name=Controller
             config.main.controller.name=MainController
@@ -124,7 +125,7 @@ spec:
             mountPath: "/opt/corda/config"
         - name: init-downloadjars
           image: {{ .Values.image.initContainer }}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["sh", "-c"]
           args:
           - |-
@@ -136,7 +137,7 @@ spec:
             readOnly: false
         - name: node-healthcheck
           image: {{ .Values.image.initContainer }}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command: ["sh", "-c"]
           args:
           - |-
