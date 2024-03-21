@@ -16,65 +16,31 @@ spec:
         name: flux-corda-app
         namespace: flux-corda-app
   values:
-    nodeName: warehouse-springboot
-    replicas: 1
-    metadata:
-      namespace: warehouse-ns
-      type: cordaopensource
     image:
-      containerName: ghcr.io/bevel-supplychain-corda:springboot-latest
-      initContainerName: ghcr.io/alpine-utils:1.0
+      webserver: ghcr.io/hyperledger/bevel-supplychain-corda:springboot-latest
+      initContainer: ghcr.io/hyperledger/bevel-alpine:latest
       imagePullSecret: regcred
-      privateCertificate: true
     smartContract:
       JAVA_OPTIONS : -Xmx512m
-    volume:
-      mountPath: /opt/corda
     nodeConf:
       node: warehouse
       nodeRpcPort: 10003
-      nodeRpcAdminPort: 10005
-      controllerName: Controller
-      trustStorePath: /opt/corda/certificates/sslkeystore.jks
-      trustStoreProvider: jks
       legalName: O=Warehouse,OU=Warehouse,L=42.36/-71.06/Boston,C=US
       devMode: false
-      useHTTPS: true
       useSSL: false
-      tlsAlias: cordaclienttls
-      ssl:
-        certificatesDirectory: na-ssl-false
-        sslKeystoreFileName: na-ssl-false
-        ssltruststore: na-ssl-false
+      readinessCheckInterval: 10
+      readinessThreshold: 15
     credentials:
-      rpcUser: warehouseoperations
+      rpcUser: nodeoperations
+      rpcUserPassword: nodeoperationsAdmin
+      keystorePassword: newpass
+      truststorePassword: newtrustpass
     resources:
       limits: "512Mi"
       requests: "512Mi"
     storage:
       memory: 512Mi
-      name: warehouse-azure-storageclass
+      name: storage-warehouse
     web:
       targetPort: 20001
       port: 20001
-    service:
-      type: NodePort
-      annotations: {}
-    networkservices:
-      networkmap: na
-      doorman: na
-    vault:
-      address: "http://vault.internal.demo.blockchaincloudpoc.com:9001"
-      role: vault-role
-      authpath: cordawarehouse
-      serviceaccountname: vault-auth
-      rpcusersecretprefix: warehouse/data/credentials/rpcusers
-      keystoresecretprefix: warehouse/data/credentials/keystore
-      certsecretprefix: warehouse/data/certs
-    node:
-      readinesscheckinterval: 10
-      readinessthreshold: 15
-    deployment:
-      annotations: {}
-    pvc:
-      annotations: {}
