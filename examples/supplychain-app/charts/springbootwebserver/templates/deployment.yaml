@@ -98,7 +98,7 @@ spec:
             cat << EOF > /opt/corda/config/app.properties
             config.rpc.username={{ .Values.credentials.rpcUser }}
             config.rpc.password={{ .Values.credentials.rpcUserPassword }}
-            config.rpc.host=corda-node-{{ .Values.nodeConf.node }}-0
+            config.rpc.host={{ .Values.nodeConf.node }}.{{ .Release.Namespace }}
             config.rpc.port={{ .Values.nodeConf.nodeRpcPort }}
             config.controller.name=Controller
             config.main.controller.name=MainController
