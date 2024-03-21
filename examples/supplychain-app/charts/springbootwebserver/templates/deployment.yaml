@@ -180,7 +180,7 @@ spec:
               claimName: {{ .Release.Name }}-pvc
           - name: node-certs
             secret:
-              secretName: {{ .Values.nodeConf.name }}-certs
+              secretName: {{ .Values.nodeConf.node }}-certs
           - name: nodeprops
             emptyDir:
               medium: Memory
