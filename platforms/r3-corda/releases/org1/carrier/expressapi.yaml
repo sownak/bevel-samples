@@ -1,0 +1,31 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: carrier-expressapi
+  namespace: carrier-ns
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  chart:
+    spec:
+      chart: examples/supplychain-app/charts/expressapp
+      sourceRef:
+        kind: GitRepository
+        name: flux-corda-app
+        namespace: flux-corda-app
+  releaseName: carrier-expressapi
+  interval: 1m
+  values:
+    expressapp:
+      image: ghcr.io/hyperledger/bevel-supplychain-corda:express-app-latest
+      pullPolicy: Always
+      pullSecrets: regcred
+      nodePorts:
+        port: 3000
+        targetPort: 3000
+      apiUrl: https://carrier-springboot.carrier-ns:20001/api/v1
+    proxy:
+      provider: ambassador
+      name: carrier
+      type: corda
+      external_url_suffix: rc.demo.blockchaincloudpoc.com
