@@ -6,7 +6,7 @@ metadata:
   annotations:
     fluxcd.io/automated: "false"
 spec:
-  releaseName: {{ peer_name }}{{ network.type }}-frontend
+  releaseName: {{ peer_name }}-frontend
   interval: 1m
   chart:
    spec:

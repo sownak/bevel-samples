@@ -14,7 +14,7 @@ spec:
       kind: GitRepository
       name: flux-{{ network.env.type }}-app
       namespace: flux-{{ network.env.type }}-app
-  releaseName: {{ name }}{{ network.type }}-expressapi
+  releaseName: {{ name }}-expressapi
   values:
     nodeName: {{ name }}-expressapi
     metadata:
