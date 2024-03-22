@@ -20,8 +20,8 @@ spec:
       nodePorts:
         port: 8080
         targetPort: 80
-      image: ghcr.io/hyperledger/bevel-supplychain-frontend:1.0.0
-      pullPolicy: IfNotPresent
+      image: ghcr.io/hyperledger/bevel-supplychain-frontend:latest
+      pullPolicy: Always
       pullSecrets: regcred
       apiURL: https://warehouseapi.rc.demo.blockchaincloudpoc.com
     deployment:
