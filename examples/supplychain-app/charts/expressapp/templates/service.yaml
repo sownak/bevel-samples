@@ -9,32 +9,6 @@ apiVersion: v1
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
-  {{- if eq $.Values.proxy.provider "ambassador" }}
-  annotations:
-    getambassador.io/config: | 
-      ---
-      apiVersion: ambassador/v2
-      kind: TLSContext
-      name: {{ .Values.proxy.name }}_api_context
-      hosts:
-      - {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
-      {{ if eq .Values.proxy.type "fabric" }}
-      secret: {{ .Values.proxy.name }}-{{ .Release.Namespace }}-ambassador-certs.default
-      {{ else }}
-      secret: {{ .Values.proxy.name }}-tls-certs.{{ .Release.Namespace }}
-      {{ end }}
-      secret_namespacing: true
-      min_tls_version: v1.2
-      ---
-      apiVersion: ambassador/v2
-      kind: Mapping
-      name: {{ .Values.proxy.name }}_api_p2p_mapping
-      prefix: /
-      host: {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
-      service: {{ .Values.proxy.name }}-expressapi.{{ .Release.Namespace }}:{{ .Values.expressapp.nodePorts.port }}
-      timeout_ms: 20000
-      tls: false
-  {{ end }}
   labels:
     run: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
@@ -49,7 +23,34 @@ spec:
     targetPort: {{ .Values.expressapp.nodePorts.targetPort }}
     protocol: TCP
     name: tcp
-    
+{{- if eq $.Values.proxy.provider "ambassador" }}
+---
+apiVersion: getambassador.io/v3alpha1
+kind: TLSContext
+metadata:
+  name: {{ .Values.proxy.name }}api-tlscontext
+spec:
+  hosts:
+  - {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
+  {{ if eq .Values.proxy.type "fabric" }}
+  secret: {{ .Values.proxy.name }}-{{ .Release.Namespace }}-ambassador-certs.default
+  {{ else }}
+  secret: {{ .Values.proxy.name }}-tls-certs.{{ .Release.Namespace }}
+  {{ end }}
+  secret_namespacing: true
+  min_tls_version: v1.2
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Mapping
+metadata:
+  name: {{ .Values.proxy.name }}api-mapping
+spec:
+  prefix: /
+  host: {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
+  service: {{ .Values.proxy.name }}-expressapi.{{ .Release.Namespace }}:{{ .Values.expressapp.nodePorts.port }}
+  timeout_ms: 20000
+  tls: false
+{{ end }}
 {{- if eq $.Values.proxy.provider "haproxy" }}
 ---
 apiVersion: networking.k8s.io/v1
