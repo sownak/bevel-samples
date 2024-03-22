@@ -16,24 +16,17 @@ spec:
       name: flux-corda-app
       namespace: flux-corda-app
   values:
-    nodeName: store-frontend
-    metadata:
-      namespace: store-ns
-    replicaCount: 1
     frontend:
-      serviceType: ClusterIP
       nodePorts:
         port: 8080
         targetPort: 80
       image: ghcr.io/hyperledger/bevel-supplychain-frontend:1.0.0
       pullPolicy: IfNotPresent
       pullSecrets: regcred
-      env:
-        webserver: https://storeapi.rc.demo.blockchaincloudpoc.com
+      apiURL: https://storeapi.rc.demo.blockchaincloudpoc.com
     deployment:
       annotations: {}
     proxy:
       provider: ambassador
       peer_name: store
       external_url_suffix: rc.demo.blockchaincloudpoc.com
-      ambassador_secret: store-ambassador-certs

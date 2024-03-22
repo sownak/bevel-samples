@@ -13,7 +13,7 @@ metadata:
     run: {{ .Release.Name }}
     app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }} 
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   type: ClusterIP
   selector:
@@ -49,7 +49,6 @@ spec:
   host: {{ .Values.proxy.name }}api.{{ .Values.proxy.external_url_suffix }}
   service: {{ .Values.proxy.name }}-expressapi.{{ .Release.Namespace }}:{{ .Values.expressapp.nodePorts.port }}
   timeout_ms: 20000
-  tls: false
 {{ end }}
 {{- if eq $.Values.proxy.provider "haproxy" }}
 ---
@@ -57,7 +56,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}
-  namespace:  {{ $.Release.Namespace }}
+  namespace:  {{ .Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: "haproxy"
 spec:
